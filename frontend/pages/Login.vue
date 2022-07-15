@@ -1,17 +1,18 @@
 <template>
   <div class="page">
     <div class="block">
-      <Auth :type="authType" />
+      <Auth :type="authType" :route="route" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SignUpPage",
+  name: "LoginPage",
   data() {
     return {
-      authType: "Inscription",
+      authType: "Connexion",
+      route: "login",
     };
   },
 };
