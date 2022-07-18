@@ -103,27 +103,27 @@ exports.modifyPublication = (req, res, next) => {
   });
 };
 
-//suppression d'une sauce
-exports.deleteSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      if (!sauce) {
+//suppression d'une publication
+exports.deletePublication = (req, res, next) => {
+  Publication.findOne({ _id: req.params.id })
+    .then((publication) => {
+      if (!publication) {
         res.status(404).json({
-          error: new Error("Sauce non trouvée !"),
+          error: new Error("Publication non trouvée !"),
         });
       }
-      //comparer le userId de la sauce et du token
-      if (sauce.userId !== req.auth.userId) {
+      //comparer le userId de la publication et du token
+      if (publication.userId !== req.auth.userId) {
         res.status(400).json({
           error: new Error("Requête non authorisée !"),
         });
       }
-      const filename = sauce.imageUrl.split("/images/")[1];
+      const filename = publication.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id })
+        Publication.deleteOne({ _id: req.params.id })
           .then(() => {
             res.status(200).json({
-              message: "Sauce Supprimée!",
+              message: "Publication Supprimée!",
             });
           })
           .catch((error) => {
@@ -137,43 +137,43 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 //gestion des likes
-exports.likeSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
+exports.likePublication = (req, res, next) => {
+  Publication.findOne({ _id: req.params.id })
+    .then((publication) => {
       //verifier que pas deja de like ou de dislike de l'utilisateur
       if (
-        sauce.usersLiked.indexOf(req.body.userId) === -1 ||
-        sauce.usersDisliked.indexOf(req.body.userId) === -1
+        publication.usersLiked.indexOf(req.body.userId) === -1 ||
+        publication.usersDisliked.indexOf(req.body.userId) === -1
       ) {
         //like
         if (req.body.like === 1) {
-          sauce.usersLiked.push(req.body.userId);
-          sauce.likes += 1;
+          publication.usersLiked.push(req.body.userId);
+          publication.likes += 1;
           //dislike
         } else if (req.body.like === -1) {
-          sauce.usersDisliked.push(req.body.userId);
-          sauce.dislikes += 1;
+          publication.usersDisliked.push(req.body.userId);
+          publication.dislikes += 1;
         }
       }
       //anuler un like
       if (
-        sauce.usersLiked.indexOf(req.body.userId) !== -1 &&
+        publication.usersLiked.indexOf(req.body.userId) !== -1 &&
         req.body.like === 0
       ) {
-        const userIndex = sauce.usersLiked.indexOf(req.body.userId);
-        sauce.usersLiked.splice(userIndex, 1);
-        sauce.likes -= 1;
+        const userIndex = publication.usersLiked.indexOf(req.body.userId);
+        publication.usersLiked.splice(userIndex, 1);
+        publication.likes -= 1;
       }
       //annuler un dislike
       if (
-        sauce.usersDisliked.indexOf(req.body.userId) !== -1 &&
+        publication.usersDisliked.indexOf(req.body.userId) !== -1 &&
         req.body.like === 0
       ) {
-        const userIndex = sauce.usersDisliked.indexOf(req.body.userId);
-        sauce.usersDisliked.splice(userIndex, 1);
-        sauce.dislikes -= 1;
+        const userIndex = publication.usersDisliked.indexOf(req.body.userId);
+        publication.usersDisliked.splice(userIndex, 1);
+        publication.dislikes -= 1;
       }
-      sauce.save();
+      publication.save();
       res.status(201).json({ message: "like mis à jour" });
     })
     .catch((error) => res.status(500).json({ error }));

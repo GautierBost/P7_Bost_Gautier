@@ -1,5 +1,5 @@
 <template>
-  <form class="form" method="post" @submit.prevent="submitForm">
+  <form class="form" method="post" @submit.prevent="checkForm">
     <h2>{{ type }}</h2>
     <div class="inputs">
       <div class="email">
@@ -27,20 +27,19 @@ export default {
     };
   },
   methods: {
-    async submitForm(route, $axios) {
-      if (this.checkForm === true) {
-        await $axios
-          .$post(`http://localhost3000/api/auth/${route}`, {
-            email: this.email,
-            password: this.password,
-          })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+    async submitForm() {
+      await this.$axios
+        .$post(`http://localhost3000/api/auth/${this.route}`, {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          console.log(response);
+          this.goLogin();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     checkForm: function () {
@@ -54,7 +53,7 @@ export default {
         this.error =
           "Votre mot de passe doit contenir au moins 6 caractères dont 1 majascule 1 minuscule et 1 chiffre";
       } else {
-        return true;
+        this.submitForm();
       }
     },
     validEmail: function (email) {
@@ -64,6 +63,10 @@ export default {
     validPassword: function (password) {
       var re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
+    },
+
+    goLogin: function () {
+      this.$router.push("/Login");
     },
   },
 };
