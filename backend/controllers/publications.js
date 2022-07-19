@@ -46,7 +46,7 @@ exports.getOnePublication = (req, res, next) => {
 
 //affichage de toutes les publications
 exports.getAllPublications = (req, res, next) => {
-  Sauce.find()
+  Publication.find()
     .then((publications) => {
       res.status(200).json(publications);
     })

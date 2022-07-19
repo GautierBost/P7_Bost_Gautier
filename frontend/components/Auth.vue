@@ -8,8 +8,9 @@
       </div>
       <div class="password">
         <label for="password">Password</label>
-        <input type="password" v-model="password" id="password" />
+        <input :type="inputType" v-model="password" id="password" />
       </div>
+      <i class="fa-solid fa-eye-slash" @click="showPassword"></i>
       <p class="error" v-if="error">{{ error }}</p>
     </div>
     <button type="submit">{{ type }}</button>
@@ -18,27 +19,29 @@
 
 <script>
 export default {
-  props: ["type", "route"],
+  props: ["type", "route", "link"],
   data() {
     return {
       email: "",
       password: "",
       error: "",
+      inputType: "password",
     };
   },
   methods: {
     async submitForm() {
       await this.$axios
-        .$post(`http://localhost3000/api/auth/${this.route}`, {
+        .$post(`http://localhost:3000/api/auth/${this.route}`, {
           email: this.email,
           password: this.password,
         })
         .then((response) => {
           console.log(response);
-          this.goLogin();
+          this.golink();
         })
         .catch((err) => {
           console.log(err);
+          this.error = err;
         });
     },
 
@@ -53,6 +56,7 @@ export default {
         this.error =
           "Votre mot de passe doit contenir au moins 6 caractères dont 1 majascule 1 minuscule et 1 chiffre";
       } else {
+        this.error = "";
         this.submitForm();
       }
     },
@@ -64,9 +68,15 @@ export default {
       var re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
     },
-
-    goLogin: function () {
-      this.$router.push("/Login");
+    golink: function () {
+      this.$router.push(`${this.link}`);
+    },
+    showPassword: function () {
+      if (this.inputType === "password") {
+        this.inputType = "text";
+      } else {
+        this.inputType = "password";
+      }
     },
   },
 };
@@ -104,6 +114,12 @@ h2 {
 
 input {
   height: 25px;
+}
+
+i {
+  position: relative;
+  top: -35px;
+  left: 310px;
 }
 
 .error {

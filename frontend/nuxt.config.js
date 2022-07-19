@@ -29,6 +29,12 @@ export default {
         href: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap",
       },
     ],
+    script: [
+      {
+        src: "https://kit.fontawesome.com/e5c44848d0.js",
+        crossorigin: "anonymous",
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

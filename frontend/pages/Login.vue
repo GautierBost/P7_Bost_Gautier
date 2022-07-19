@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="block">
-      <Auth :type="authType" :route="route" />
+      <Auth :type="authType" :route="route" :link="link" />
     </div>
   </div>
 </template>
@@ -13,6 +13,7 @@ export default {
     return {
       authType: "Connexion",
       route: "login",
+      link: "/HomePage",
     };
   },
 };

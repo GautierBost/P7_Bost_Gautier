@@ -4,27 +4,43 @@
       <img class="logo" src="/logo-name.svg" alt="logo" />
     </div>
     <div class="menu">
-      <div>rechercher</div>
-      <div class="toggle">
+      <div class="toggle" @click="toggle">
         <div class="profil-img">
-          <img src="/ma-photo.png" alt="" />
+          <img src="/avatar-neutre.jpg" alt="photo de profil" />
         </div>
         <div class="arrow">
           <div class="left"></div>
           <div class="right"></div>
         </div>
       </div>
-      <div class="options">
-        <div>profil</div>
-        <div>mes post</div>
-        <div>se deconecter</div>
-      </div>
+      <transition name="fade">
+        <div class="options" v-if="show">
+          <a>profil</a>
+          <a>mes post</a>
+          <a>se deconecter</a>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      show: false,
+    };
+  },
+  methods: {
+    toggle: function () {
+      if (this.show === false) {
+        this.show = true;
+      } else {
+        this.show = false;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -39,6 +55,7 @@ export default {};
   left: 0;
   right: 0;
   color: #4e5166;
+  background-color: white;
 }
 
 .img-box {
@@ -61,7 +78,7 @@ export default {};
 .toggle {
   width: 100px;
   padding: 5px;
-  margin-right: 10px;
+  margin-right: 30px;
   border: 2px solid #4e5166;
   border-radius: 100vh;
   display: flex;
@@ -89,8 +106,14 @@ export default {};
 .arrow {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-right: 10px;
   width: 30px;
   height: 30px;
+}
+
+.arrow:focus {
+  transform: rotate(180deg);
 }
 
 .left {
@@ -99,7 +122,7 @@ export default {};
   background-color: #4e5166;
   transform: rotate(-40deg);
   position: relative;
-  left: 4px;
+  left: 2px;
 }
 
 .right {
@@ -107,6 +130,8 @@ export default {};
   height: 3px;
   background-color: #4e5166;
   transform: rotate(40deg);
+  position: relative;
+  left: -2px;
 }
 
 .options {
@@ -117,5 +142,23 @@ export default {};
   box-shadow: 0 6px 12px #505050;
   font-size: 25px;
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+a {
+  padding: 10px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s, transform 1s;
+}
+
+.fade-enter,
+.fade-leave {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>
