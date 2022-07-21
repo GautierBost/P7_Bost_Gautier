@@ -9,4 +9,6 @@ router.post("/signup", userCtrl.signup);
 //route connexion a un compte utilisateur
 router.post("/login", userCtrl.login);
 
+router.get("/user", userCtrl.user);
+
 module.exports = router;

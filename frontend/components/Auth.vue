@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  props: ["type", "route", "link"],
+  props: ["type", "submitForm"],
   data() {
     return {
       email: "",
@@ -29,22 +29,6 @@ export default {
     };
   },
   methods: {
-    async submitForm() {
-      await this.$axios
-        .$post(`http://localhost:3000/api/auth/${this.route}`, {
-          email: this.email,
-          password: this.password,
-        })
-        .then((response) => {
-          console.log(response);
-          this.golink();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.error = err;
-        });
-    },
-
     checkForm: function () {
       if (!this.email) {
         this.error = "Email requis";
@@ -57,7 +41,7 @@ export default {
           "Votre mot de passe doit contenir au moins 6 caractères dont 1 majascule 1 minuscule et 1 chiffre";
       } else {
         this.error = "";
-        this.submitForm();
+        this.submitForm;
       }
     },
     validEmail: function (email) {
@@ -68,9 +52,7 @@ export default {
       var re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
     },
-    golink: function () {
-      this.$router.push(`${this.link}`);
-    },
+
     showPassword: function () {
       if (this.inputType === "password") {
         this.inputType = "text";

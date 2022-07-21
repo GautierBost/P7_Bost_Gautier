@@ -2,6 +2,7 @@
   <div class="page">
     <Banner />
     <PublicationForm />
+    <Publication />
   </div>
 </template>
 

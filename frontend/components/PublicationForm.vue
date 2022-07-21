@@ -1,19 +1,27 @@
 <template>
-  <form class="form" method="post">
+  <form class="form" method="post" @submit.prevent="submitForm">
     <label for="publication">Écrivez quelque chose...</label>
     <textarea
       name="publication"
       id="publication"
       cols="30"
       rows="10"
+      v-model="content"
     ></textarea>
-    <input class="file" type="file" accept=".jpg, .png, .gif" />
+    <input class="file" type="file" accept=".jpg, .jpeg, .png, .gif" />
     <button class="button" type="submit">Publier</button>
   </form>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      content: "",
+    };
+  },
+  methods: {},
+};
 </script>
 
 <style scoped>

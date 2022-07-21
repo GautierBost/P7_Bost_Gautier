@@ -50,8 +50,14 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  auth: {},
+
+  // router: {
+  //   middleware: ["auth"],
+  // },
 };

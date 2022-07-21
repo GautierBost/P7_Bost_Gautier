@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="block">
-      <Auth :type="authType" :route="route" :link="link" />
+      <Auth :type="authType" :submitForm="submitForm" />
     </div>
   </div>
 </template>
@@ -9,12 +9,28 @@
 <script>
 export default {
   name: "SignUpPage",
+  auth: false,
   data() {
     return {
       authType: "Inscription",
-      route: "signup",
-      link: "/Login",
     };
+  },
+  methods: {
+    async submitForm() {
+      await this.$axios
+        .$post(`http://localhost:3000/api/auth/signup`, {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          console.log(response);
+          this.$router.push("/Login");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.error = err.message;
+        });
+    },
   },
 };
 </script>

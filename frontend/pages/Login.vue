@@ -9,12 +9,28 @@
 <script>
 export default {
   name: "LoginPage",
+  auth: false,
   data() {
     return {
       authType: "Connexion",
-      route: "login",
-      link: "/HomePage",
     };
+  },
+  async submitForm() {
+    await this.$auth
+      .loginWith("local", {
+        data: {
+          email: this.email,
+          password: this.password,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        this.$router.push("/HomePage");
+      })
+      .catch((err) => {
+        console.log(err);
+        this.error = err.message;
+      });
   },
 };
 </script>

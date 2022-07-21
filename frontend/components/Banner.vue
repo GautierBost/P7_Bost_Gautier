@@ -4,7 +4,7 @@
       <img class="logo" src="/logo-name.svg" alt="logo" />
     </div>
     <div class="menu">
-      <div class="toggle" @click="toggle">
+      <div class="toggle" :class="{ isActive: show }" @click="toggle">
         <div class="profil-img">
           <img src="/avatar-neutre.jpg" alt="photo de profil" />
         </div>
@@ -15,9 +15,10 @@
       </div>
       <transition name="fade">
         <div class="options" v-if="show">
-          <a>profil</a>
-          <a>mes post</a>
-          <a>se deconecter</a>
+          <NuxtLink to="HomePage">Acceuil</NuxtLink>
+          <NuxtLink to="Profil">Mon profil</NuxtLink>
+          <NuxtLink to="MyPublications">Mes post</NuxtLink>
+          <a href="">Se deconecter</a>
         </div>
       </transition>
     </div>
@@ -87,6 +88,10 @@ export default {
   transition: 300ms background-color;
 }
 
+.toggle.isActive .arrow {
+  transform: rotate(180deg);
+}
+
 .toggle:hover {
   background-color: #eeeeee;
 }
@@ -110,6 +115,7 @@ export default {
   margin-right: 10px;
   width: 30px;
   height: 30px;
+  transition: 500ms transform;
 }
 
 .arrow:focus {
@@ -148,7 +154,8 @@ export default {
 }
 
 a {
-  padding: 10px;
+  margin: 10px;
+  color: #4e5166;
 }
 
 .fade-enter-active,
