@@ -55,9 +55,35 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  auth: {},
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: "token",
+          global: true,
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: "user",
+          // autoFetch: true
+        },
+        endpoints: {
+          login: {
+            url: "http://localhost:3000/api/auth/login",
+            method: "post",
+          },
+          logout: {
+            url: "http://localhost:3000/api/auth/logout",
+            method: "post",
+          },
+          user: { url: "http://localhost:3000/api/auth/user", method: "get" },
+        },
+      },
+    },
+  },
 
-  // router: {
-  //   middleware: ["auth"],
-  // },
+  router: {
+    middleware: ["auth"],
+  },
 };

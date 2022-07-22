@@ -4,14 +4,15 @@
     <div class="inputs">
       <div class="email">
         <label for="email">Email</label>
-        <input type="email" v-model="email" id="email" />
+        <input type="email" v-model="userInfo.email" id="email" />
       </div>
       <div class="password">
         <label for="password">Password</label>
-        <input :type="inputType" v-model="password" id="password" />
+        <input :type="inputType" v-model="userInfo.password" id="password" />
       </div>
       <i class="fa-solid fa-eye-slash" @click="showPassword"></i>
       <p class="error" v-if="error">{{ error }}</p>
+      <p class="error" v-if="servError">{{ servError }}</p>
     </div>
     <button type="submit">{{ type }}</button>
   </form>
@@ -19,29 +20,31 @@
 
 <script>
 export default {
-  props: ["type", "submitForm"],
+  props: ["type", "submitForm", "servError"],
   data() {
     return {
-      email: "",
-      password: "",
+      userInfo: {
+        email: "",
+        password: "",
+      },
       error: "",
       inputType: "password",
     };
   },
   methods: {
     checkForm: function () {
-      if (!this.email) {
+      if (!this.userInfo.email) {
         this.error = "Email requis";
-      } else if (!this.validEmail(this.email)) {
+      } else if (!this.validEmail(this.userInfo.email)) {
         this.error = "Email invalide";
-      } else if (!this.password) {
+      } else if (!this.userInfo.password) {
         this.error = "Mot de passe requis";
-      } else if (!this.validPassword(this.password)) {
+      } else if (!this.validPassword(this.userInfo.password)) {
         this.error =
           "Votre mot de passe doit contenir au moins 6 caractères dont 1 majascule 1 minuscule et 1 chiffre";
       } else {
         this.error = "";
-        this.submitForm;
+        this.submitForm(this.userInfo);
       }
     },
     validEmail: function (email) {
