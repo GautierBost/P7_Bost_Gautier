@@ -47,13 +47,17 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [],
+  buildModules: ["@nuxtjs/style-resources"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  styleResources: {
+    scss: ["~assets/scss/mixins.scss", "~assets/scss/variables.scss"],
+  },
 
   auth: {
     strategies: {
@@ -71,10 +75,6 @@ export default {
         endpoints: {
           login: {
             url: "http://localhost:3000/api/auth/login",
-            method: "post",
-          },
-          logout: {
-            url: "http://localhost:3000/api/auth/logout",
             method: "post",
           },
           user: { url: "http://localhost:3000/api/auth/user", method: "get" },

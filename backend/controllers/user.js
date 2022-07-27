@@ -58,9 +58,9 @@ exports.login = (req, res, next) => {
 
 // fonction recuperation d'un user
 exports.user = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ token: req.body.token })
     .then((user) => {
-      res.status(200).json(user);
+      res.status(200).json({ user });
     })
     .catch((error) => res.status(404).json({ error: error }));
 };

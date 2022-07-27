@@ -1,12 +1,12 @@
 <template>
   <form class="form" method="post" @submit.prevent="checkForm">
-    <h2>{{ type }}</h2>
-    <div class="inputs">
-      <div class="email">
+    <h2 class="form__title">{{ type }}</h2>
+    <div class="form__inputs">
+      <div class="form__inputs__email">
         <label for="email">Email</label>
         <input type="email" v-model="userInfo.email" id="email" />
       </div>
-      <div class="password">
+      <div class="form__inputs__password">
         <label for="password">Password</label>
         <input :type="inputType" v-model="userInfo.password" id="password" />
       </div>
@@ -14,12 +14,13 @@
       <p class="error" v-if="error">{{ error }}</p>
       <p class="error" v-if="servError">{{ servError }}</p>
     </div>
-    <button type="submit">{{ type }}</button>
+    <button class="form__button" type="submit">{{ type }}</button>
   </form>
 </template>
 
 <script>
 export default {
+  name: "auth",
   props: ["type", "submitForm", "servError"],
   data() {
     return {
@@ -67,65 +68,63 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form {
-  border-radius: 15px;
-  box-shadow: 0 8px 15px #505050;
+  @include vignette;
   display: flex;
   flex-direction: column;
   font-size: 18px;
-  background-color: white;
-}
 
-h2 {
-  color: #fd2d01;
-  margin-left: 10px;
-  font-size: 30px;
-}
+  &__title {
+    color: $primary-color;
+    margin-left: 10px;
+    font-size: 30px;
+  }
 
-.inputs {
-  border-top: 2px solid #cccccc;
-  border-bottom: 2px solid #cccccc;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
-}
+  &__inputs {
+    border-top: 2px solid #cccccc;
+    border-bottom: 2px solid #cccccc;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
 
-.email,
-.password {
-  margin: 10px 100px 10px 0;
-  align-self: flex-end;
-}
+    &__email,
+    &__password {
+      margin: 10px 100px 10px 0;
+      align-self: flex-end;
+    }
 
-input {
-  height: 25px;
-}
+    input {
+      height: 25px;
+    }
+  }
 
-i {
-  position: relative;
-  top: -35px;
-  left: 310px;
-}
+  i {
+    position: relative;
+    top: -35px;
+    left: 310px;
+  }
 
-.error {
-  color: red;
-  margin: 10px;
-}
+  .error {
+    color: red;
+    margin: 10px;
+  }
 
-button {
-  font-family: inherit;
-  color: #4e5166;
-  margin: 10px;
-  padding: 5px;
-  align-self: flex-end;
-  border-radius: 10px;
-  background-color: #ffd7d7;
-  font-size: 20px;
-  transition-property: background-color;
-  transition-duration: 300ms;
-}
+  &__button {
+    font-family: inherit;
+    font-size: 20px;
+    color: $tertiary-color;
+    margin: 10px;
+    padding: 5px;
+    align-self: flex-end;
+    border-radius: 10px;
+    background-color: $secondary-color;
+    transition-property: background-color;
+    transition-duration: 300ms;
 
-button:hover {
-  background-color: #ffb7b7;
+    &:hover {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
 }
 </style>

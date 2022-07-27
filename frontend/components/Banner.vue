@@ -1,14 +1,18 @@
 <template>
   <div class="banner">
-    <div class="img-box">
-      <img class="logo" src="/logo-name.svg" alt="logo" />
+    <div class="banner__logo">
+      <img class="banner__logo__img" src="/logo-name.svg" alt="logo" />
     </div>
-    <div class="menu">
-      <div class="toggle" :class="{ isActive: show }" @click="toggle">
-        <div class="profil-img">
+    <div class="banner__menu">
+      <div
+        class="banner__menu__toggle"
+        :class="{ isActive: show }"
+        @click="toggle"
+      >
+        <div class="banner__menu__toggle__img-box">
           <img src="/avatar-neutre.jpg" alt="photo de profil" />
         </div>
-        <div class="arrow">
+        <div class="banner__menu__toggle__arrow">
           <div class="left"></div>
           <div class="right"></div>
         </div>
@@ -18,7 +22,7 @@
           <NuxtLink to="HomePage">Acceuil</NuxtLink>
           <NuxtLink to="Profil">Mon profil</NuxtLink>
           <NuxtLink to="MyPublications">Mes post</NuxtLink>
-          <a href="">Se deconecter</a>
+          <a href="" @click.prevent="$auth.logout()">Se deconecter</a>
         </div>
       </transition>
     </div>
@@ -27,6 +31,7 @@
 
 <script>
 export default {
+  name: "banner",
   data() {
     return {
       show: false,
@@ -44,7 +49,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .banner {
   display: flex;
   justify-content: space-between;
@@ -55,117 +60,111 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  color: #4e5166;
+  color: $tertiary-color;
   background-color: white;
-}
 
-.img-box {
-  display: flex;
-  width: 300px;
-  height: 100px;
-}
+  &__logo {
+    display: flex;
+    width: 300px;
+    height: 100px;
 
-.logo {
-  width: 100%;
-  object-fit: cover;
-}
+    &__img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 
-.menu {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  &__menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-.toggle {
-  width: 100px;
-  padding: 5px;
-  margin-right: 30px;
-  border: 2px solid #4e5166;
-  border-radius: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: 300ms background-color;
-}
+    &__toggle {
+      width: 100px;
+      padding: 5px;
+      margin-right: 30px;
+      border: 2px solid $tertiary-color;
+      border-radius: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 300ms background-color;
 
-.toggle.isActive .arrow {
-  transform: rotate(180deg);
-}
+      &:hover {
+        background-color: #eeeeee;
+      }
+      &__img-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
 
-.toggle:hover {
-  background-color: #eeeeee;
-}
-.profil-img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-}
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
 
-.profil-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+      &.isActive &__arrow {
+        transform: rotate(180deg);
+      }
 
-.arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  width: 30px;
-  height: 30px;
-  transition: 500ms transform;
-}
+      &__arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        width: 30px;
+        height: 30px;
+        transition: 500ms transform;
 
-.arrow:focus {
-  transform: rotate(180deg);
-}
+        .left {
+          width: 8px;
+          height: 3px;
+          background-color: $tertiary-color;
+          transform: rotate(-40deg);
+          position: relative;
+          left: 2px;
+        }
 
-.left {
-  width: 8px;
-  height: 3px;
-  background-color: #4e5166;
-  transform: rotate(-40deg);
-  position: relative;
-  left: 2px;
-}
+        .right {
+          width: 8px;
+          height: 3px;
+          background-color: $tertiary-color;
+          transform: rotate(40deg);
+          position: relative;
+          left: -2px;
+        }
+      }
+    }
 
-.right {
-  width: 8px;
-  height: 3px;
-  background-color: #4e5166;
-  transform: rotate(40deg);
-  position: relative;
-  left: -2px;
-}
+    .options {
+      position: fixed;
+      right: 0;
+      top: 110px;
+      font-size: 25px;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      @include vignette;
+    }
 
-.options {
-  position: fixed;
-  right: 0;
-  top: 110px;
-  border-radius: 10px;
-  box-shadow: 0 6px 12px #505050;
-  font-size: 25px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-}
+    a {
+      margin: 10px;
+      color: $tertiary-color;
+    }
 
-a {
-  margin: 10px;
-  color: #4e5166;
-}
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 1s, transform 1s;
+    }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s, transform 1s;
-}
-
-.fade-enter,
-.fade-leave {
-  opacity: 0;
-  transform: translateY(20px);
+    .fade-enter,
+    .fade-leave {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
 }
 </style>

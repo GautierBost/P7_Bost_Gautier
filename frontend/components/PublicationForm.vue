@@ -24,31 +24,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form {
   display: flex;
   flex-direction: column;
-  margin: 120px 0 0 20px;
+  margin: 120px 0 20px 0;
   padding: 10px;
   width: 800px;
-  box-shadow: 0 2px 5px #505050;
-  border-radius: 10px;
-  background-color: white;
+  @include vignette;
 }
 
 label {
   padding: 10px;
-  color: #4e5166;
+  color: $tertiary-color;
 }
 
 #publication {
   padding: 10px;
-  border: 1.5px solid #4e5166;
+  border: 1.5px solid $tertiary-color;
   border-radius: 5px;
   resize: none;
   font-size: 15px;
   font-family: "Lato", sans-serif;
-  color: #4e5166;
 }
 
 .file {
@@ -59,14 +56,13 @@ label {
 .button {
   padding: 5px;
   border-radius: 5px;
-  color: #4e5166;
-  background-color: #ffd7d7;
+  background-color: $secondary-color;
   width: 200px;
   align-self: center;
   transition: 300ms background-color;
 }
 
 .button:hover {
-  background-color: #ffb7b7;
+  background-color: darken($secondary-color, 10%);
 }
 </style>
