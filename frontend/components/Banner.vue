@@ -39,11 +39,10 @@ export default {
   },
   methods: {
     toggle: function () {
-      if (this.show === false) {
-        this.show = true;
-      } else {
-        this.show = false;
-      }
+      // if (this.show === false) {
+      //   this.show = true;
+      // } else {
+      this.show = !this.show;
     },
   },
 };
