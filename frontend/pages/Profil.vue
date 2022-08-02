@@ -1,22 +1,22 @@
 <template>
   <div class="page">
     <Banner />
-    <div class="userInfo">
-      <div class="profil-img">
-        <img src="/avatar-neutre.jpg" alt="photo de profil" />
+    <div class="user-info">
+      <div class="user-info__profile-picture">
+        <img :src="profilePicture" alt="photo de profil" />
       </div>
-      <p class="pseudo">Pseudo</p>
+      <p class="user-info__name">{{ name }}</p>
     </div>
     <form class="form" method="post">
-      <div class="userName">
-        <label for="userName">Changer de pseudo</label>
-        <input type="text" id="userName" />
+      <div class="form__name">
+        <label for="name">Changer de nom d'utilisateur</label>
+        <input type="text" id="name" />
       </div>
-      <div class="profilPicture">
-        <label for="profilPicture">Changer votre photo de profil</label>
-        <input type="file" id="profilPicture" />
+      <div class="form__profile-picture">
+        <label for="profile-picture">Changer votre photo de profil</label>
+        <input type="file" id="profile-picture" />
       </div>
-      <button type="submit">Modifier</button>
+      <button class="form__button" type="submit">Modifier</button>
     </form>
   </div>
 </template>
@@ -24,44 +24,42 @@
 <script>
 export default {
   name: "Profil",
+  data() {
+    return {
+      name: this.$auth.$state.user.name,
+      profilePicture: this.$auth.$state.user.profilePicture,
+    };
+  },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .page {
-  background-color: #eeeeee;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @include page;
+}
+
+.user-info {
   display: flex;
-  flex-direction: column;
+  margin: 50px 10px;
   align-items: center;
-}
 
-.userInfo {
-  display: flex;
-  margin: 200px 10px 50px 10px;
-  align-items: center;
-}
+  &__profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
 
-.profil-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
-}
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
-.profil-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pseudo {
-  margin-left: 20px;
-  font-size: 30px;
+  &__name {
+    margin-left: 20px;
+    font-size: 30px;
+  }
 }
 
 .form {
@@ -71,23 +69,42 @@ export default {
   border-radius: 15px;
   padding: 10px;
   box-shadow: 0 6px 12px #505050;
-}
 
-.userName {
-  display: flex;
-  flex-direction: column;
-  margin: 15px;
-  font-size: 20px;
-}
+  &__name {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    font-size: 20px;
 
-.profilPicture {
-  display: flex;
-  flex-direction: column;
-  margin: 15px;
-  font-size: 20px;
-}
+    input {
+      font-size: 20px;
+      border-radius: 5px;
+    }
+  }
 
-label {
-  margin-bottom: 10px;
+  &__profile-picture {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    font-size: 20px;
+  }
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  &__button {
+    width: 50%;
+    padding: 5px;
+    align-self: center;
+    border-radius: 5px;
+    font-size: 15px;
+    background-color: $secondary-color;
+    transition: 300ms background-color;
+
+    &:hover {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
 }
 </style>

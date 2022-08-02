@@ -10,7 +10,7 @@
         @click="toggle"
       >
         <div class="banner__menu__toggle__img-box">
-          <img src="/avatar-neutre.jpg" alt="photo de profil" />
+          <img :src="profilePicture" alt="photo de profil" />
         </div>
         <div class="banner__menu__toggle__arrow">
           <div class="left"></div>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <transition name="fade">
-        <div class="options" v-if="show">
+        <div class="banner__menu__options" v-if="show">
           <NuxtLink to="HomePage">Acceuil</NuxtLink>
           <NuxtLink to="Profil">Mon profil</NuxtLink>
           <NuxtLink to="MyPublications">Mes post</NuxtLink>
@@ -35,13 +35,11 @@ export default {
   data() {
     return {
       show: false,
+      profilePicture: this.$auth.$state.user.profilePicture,
     };
   },
   methods: {
     toggle: function () {
-      // if (this.show === false) {
-      //   this.show = true;
-      // } else {
       this.show = !this.show;
     },
   },
@@ -138,7 +136,7 @@ export default {
       }
     }
 
-    .options {
+    &__options {
       position: fixed;
       right: 0;
       top: 110px;
@@ -147,11 +145,15 @@ export default {
       display: flex;
       flex-direction: column;
       @include vignette;
-    }
 
-    a {
-      margin: 10px;
-      color: $tertiary-color;
+      a {
+        margin: 10px;
+        color: $tertiary-color;
+
+        &.nuxt-link-active {
+          color: $primary-color;
+        }
+      }
     }
 
     .fade-enter-active,

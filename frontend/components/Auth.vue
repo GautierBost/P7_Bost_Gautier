@@ -11,6 +11,10 @@
         <input :type="inputType" v-model="userInfo.password" id="password" />
       </div>
       <i class="fa-solid fa-eye-slash" @click="showPassword"></i>
+      <div class="form__inputs__name" v-if="signUp === true">
+        <label for="name">Nom d'utilisateur</label>
+        <input type="text" v-model="userInfo.name" id="name" />
+      </div>
       <p class="error" v-if="error">{{ error }}</p>
       <p class="error" v-if="servError">{{ servError }}</p>
     </div>
@@ -21,12 +25,13 @@
 <script>
 export default {
   name: "auth",
-  props: ["type", "submitForm", "servError"],
+  props: ["type", "submitForm", "servError", "signUp"],
   data() {
     return {
       userInfo: {
         email: "",
         password: "",
+        name: "",
       },
       error: "",
       inputType: "password",
@@ -43,18 +48,29 @@ export default {
       } else if (!this.validPassword(this.userInfo.password)) {
         this.error =
           "Votre mot de passe doit contenir au moins 6 caractères dont 1 majascule 1 minuscule et 1 chiffre";
+      } else if (this.signUp === true) {
+        if (!this.userInfo.name) {
+          this.error = "Nom d'utilisateur requis";
+        } else if (!this.validName(this.userInfo.name)) {
+          this.error = "Nom d'utilisateur invalide";
+        }
       } else {
         this.error = "";
         this.submitForm(this.userInfo);
       }
     },
     validEmail: function (email) {
-      var re = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
+      const re = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
       return re.test(email);
     },
     validPassword: function (password) {
-      var re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
+      const re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
+    },
+    validName: function (name) {
+      const re =
+        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,30}$/g;
+      return re.test(name);
     },
 
     showPassword: function () {
@@ -89,9 +105,12 @@ export default {
     padding: 20px 0;
 
     &__email,
-    &__password {
-      margin: 10px 100px 10px 0;
-      align-self: flex-end;
+    &__password,
+    &__name {
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      align-self: center;
     }
 
     input {

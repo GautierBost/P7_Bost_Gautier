@@ -4,6 +4,13 @@ const uniqueValidator = require("mongoose-unique-validator");
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  name: { type: String, required: true },
+  profilePicture: {
+    type: String,
+    required: false,
+    default: "http://localhost:3000/images/avatar-neutre.jpg",
+  },
+  isAdmin: { type: Boolean, required: true, default: false },
 });
 
 userSchema.plugin(uniqueValidator);

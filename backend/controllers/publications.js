@@ -5,28 +5,50 @@ const fs = require("fs");
 exports.createPublication = (req, res, next) => {
   const publicationObject = JSON.parse(req.body.publication);
   delete publicationObject._id;
-  const publication = new Publication({
-    ...publicationObject,
-    likes: 0,
-    dislikes: 0,
-    usersLiked: [],
-    usersDisliked: [],
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
-  });
-  publication
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Publication Créée!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
+  if (!req.file) {
+    const publication = new Publication({
+      ...publicationObject,
+      likes: 0,
+      dislikes: 0,
+      usersLiked: [],
+      usersDisliked: [],
     });
+    publication
+      .save()
+      .then(() => {
+        res.status(201).json({
+          message: "Publication Créée!",
+        });
+      })
+      .catch((error) => {
+        res.status(400).json({
+          error: error,
+        });
+      });
+  } else {
+    const publication = new Publication({
+      ...publicationObject,
+      likes: 0,
+      dislikes: 0,
+      usersLiked: [],
+      usersDisliked: [],
+      imageUrl: `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`,
+    });
+    publication
+      .save()
+      .then(() => {
+        res.status(201).json({
+          message: "Publication Créée!",
+        });
+      })
+      .catch((error) => {
+        res.status(400).json({
+          error: error,
+        });
+      });
+  }
 };
 
 //affichage d'une publication

@@ -14,6 +14,7 @@ exports.signup = (req, res, next) => {
       const user = new User({
         email: req.body.email,
         password: hash,
+        name: req.body.name,
       });
       user
         .save()
@@ -63,4 +64,45 @@ exports.user = (req, res, next) => {
       res.status(200).json({ user });
     })
     .catch((error) => res.status(404).json({ error: error }));
+};
+
+// fonction modification d'un user
+exports.modifyUser = (req, res, next) => {
+  User.findOne({ _id: req.params.id }).then((user) => {
+    //comparer le userId du user et du token
+    if (user._id !== req.auth.userId) {
+      res.status(400).json({
+        error: new Error("Requête non authorisée !"),
+      });
+    }
+    //si nouvelle image suppression de l'ancienne
+    if (req.file) {
+      const filename = publication.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) throw err;
+      });
+    }
+    const userObject = req.file
+      ? {
+          ...JSON.parse(req.body.user),
+          profilePicture: `${req.protocol}://${req.get("host")}/images/${
+            req.file.filename
+          }`,
+        }
+      : { ...req.body };
+    User.updateOne(
+      { _id: req.params.id },
+      { ...userObject, _id: req.params.id }
+    )
+      .then(() => {
+        res.status(201).json({
+          message: "Utilisateur modifiée!",
+        });
+      })
+      .catch((error) => {
+        res.status(400).json({
+          error: error,
+        });
+      });
+  });
 };

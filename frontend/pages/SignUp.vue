@@ -1,7 +1,12 @@
 <template>
   <div class="page">
     <div class="block">
-      <Auth :type="authType" :submitForm="submitForm" :servError="servError" />
+      <Auth
+        :type="authType"
+        :submitForm="submitForm"
+        :servError="servError"
+        :signUp="signUp"
+      />
     </div>
   </div>
 </template>
@@ -14,6 +19,7 @@ export default {
     return {
       authType: "Inscription",
       servError: "",
+      signUp: true,
     };
   },
   methods: {
