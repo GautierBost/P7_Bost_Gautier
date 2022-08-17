@@ -53,6 +53,9 @@ export default {
           this.error = "Nom d'utilisateur requis";
         } else if (!this.validName(this.userInfo.name)) {
           this.error = "Nom d'utilisateur invalide";
+        } else {
+          this.error = "";
+          this.submitForm(this.userInfo);
         }
       } else {
         this.error = "";

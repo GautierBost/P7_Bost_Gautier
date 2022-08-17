@@ -31,15 +31,22 @@ export default {
         userId: this.$auth.$state.user._id,
         userName: this.$auth.$state.user.name,
         userProfilePicture: this.$auth.$state.user.profilePicture,
+        creationDate: 0,
       },
       images: null,
     };
   },
+
   methods: {
+    setDate() {
+      this.publication.creationDate = Date.now();
+    },
+
     uploadFile() {
       this.images = this.$refs.file.files[0];
     },
     async submitForm() {
+      this.setDate();
       const formData = new FormData();
       formData.append("publication", JSON.stringify(this.publication));
       formData.append("image", this.images);
@@ -51,6 +58,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.$emit("updateNewPost", res);
         })
         .catch((err) => {
           console.log(err);
@@ -64,7 +72,7 @@ export default {
 .form {
   display: flex;
   flex-direction: column;
-  margin: 120px 0 20px 0;
+  margin: 0px 0 20px 0;
   padding: 10px;
   width: 800px;
   @include vignette;

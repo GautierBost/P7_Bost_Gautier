@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
   profilePicture: {
     type: String,
     required: false,
-    default: "http://localhost:3000/images/avatar-neutre.jpg",
+    default: "http://localhost:3000/images/default-picture.jpg",
   },
   isAdmin: { type: Boolean, required: true, default: false },
 });

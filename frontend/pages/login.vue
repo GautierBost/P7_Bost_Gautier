@@ -1,34 +1,31 @@
 <template>
   <div class="page">
     <div class="block">
-      <Auth
-        :type="authType"
-        :submitForm="submitForm"
-        :servError="servError"
-        :signUp="signUp"
-      />
+      <Auth :type="authType" :submitForm="submitForm" :servError="servError" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SignUpPage",
+  name: "login",
+  layout: "before-login",
   auth: false,
   data() {
     return {
-      authType: "Inscription",
+      authType: "Connexion",
       servError: "",
-      signUp: true,
     };
   },
   methods: {
     async submitForm(userInfo) {
-      await this.$axios
-        .$post(`http://localhost:3000/api/auth/signup`, userInfo)
+      await this.$auth
+        .loginWith("local", {
+          data: userInfo,
+        })
         .then((response) => {
           console.log(response);
-          this.$router.push("/Login");
+          this.$router.push("/home-page");
         })
         .catch((err) => {
           console.log(err);

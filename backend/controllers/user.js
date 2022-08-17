@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -59,40 +60,40 @@ exports.login = (req, res, next) => {
 
 // fonction recuperation d'un user
 exports.user = (req, res, next) => {
-  User.findOne({ token: req.body.token })
+  User.findOne({ _id: req.auth.userId })
     .then((user) => {
       res.status(200).json({ user });
     })
-    .catch((error) => res.status(404).json({ error: error }));
+    .catch((error) => res.status(404).json({ error }));
 };
 
 // fonction modification d'un user
 exports.modifyUser = (req, res, next) => {
-  User.findOne({ _id: req.params.id }).then((user) => {
-    //comparer le userId du user et du token
-    if (user._id !== req.auth.userId) {
-      res.status(400).json({
-        error: new Error("Requête non authorisée !"),
-      });
-    }
-    //si nouvelle image suppression de l'ancienne
+  User.findOne({ _id: req.params.userId }).then((user) => {
+    // si nouvelle image suppression de l'ancienne
     if (req.file) {
-      const filename = publication.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, (err) => {
-        if (err) throw err;
-      });
+      const filename = user.profilePicture.split("/images/")[1];
+      if (filename !== "default-picture.jpg") {
+        fs.unlink(`images/${filename}`, (err) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json({ error: err });
+            return;
+          }
+        });
+      }
     }
     const userObject = req.file
       ? {
-          ...JSON.parse(req.body.user),
+          ...JSON.parse(req.body.userInfo),
           profilePicture: `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`,
         }
       : { ...req.body };
     User.updateOne(
-      { _id: req.params.id },
-      { ...userObject, _id: req.params.id }
+      { _id: req.params.userId },
+      { ...userObject, _id: req.params.userId }
     )
       .then(() => {
         res.status(201).json({
@@ -100,6 +101,7 @@ exports.modifyUser = (req, res, next) => {
         });
       })
       .catch((error) => {
+        console.log(error);
         res.status(400).json({
           error: error,
         });

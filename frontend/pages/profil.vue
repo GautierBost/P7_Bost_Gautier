@@ -1,20 +1,25 @@
 <template>
   <div class="page">
-    <Banner />
     <div class="user-info">
       <div class="user-info__profile-picture">
         <img :src="profilePicture" alt="photo de profil" />
       </div>
       <p class="user-info__name">{{ name }}</p>
     </div>
-    <form class="form" method="post">
+    <form class="form" method="post" @submit.prevent="submitForm">
       <div class="form__name">
         <label for="name">Changer de nom d'utilisateur</label>
-        <input type="text" id="name" />
+        <input type="text" v-model="userInfo.name" id="name" />
       </div>
       <div class="form__profile-picture">
         <label for="profile-picture">Changer votre photo de profil</label>
-        <input type="file" id="profile-picture" />
+        <input
+          type="file"
+          accept=".jpg, .jpeg, .png"
+          ref="file"
+          @change="uploadFile"
+          id="profile-picture"
+        />
       </div>
       <button class="form__button" type="submit">Modifier</button>
     </form>
@@ -23,12 +28,43 @@
 
 <script>
 export default {
-  name: "Profil",
+  name: "profil",
   data() {
     return {
       name: this.$auth.$state.user.name,
       profilePicture: this.$auth.$state.user.profilePicture,
+      userInfo: {
+        name: "",
+      },
+      images: null,
     };
+  },
+
+  methods: {
+    uploadFile() {
+      this.images = this.$refs.file.files[0];
+    },
+    async submitForm() {
+      const formData = new FormData();
+      formData.append("userInfo", JSON.stringify(this.userInfo));
+      formData.append("image", this.images);
+      const headers = { "Content-Type": "multipart/form-data" };
+
+      await this.$axios
+        .$put(
+          `${process.env.apiUrl}/auth/${this.$auth.$state.user._id}`,
+          formData,
+          {
+            headers,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>

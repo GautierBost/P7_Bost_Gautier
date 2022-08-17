@@ -3,8 +3,8 @@
     <img class="page__logo" src="/logo.svg" alt="logo" />
     <h1 class="page__title">Groupomania</h1>
     <div class="page__links">
-      <NuxtLink to="Login">Connexion</NuxtLink>
-      <NuxtLink to="SignUp">Inscription</NuxtLink>
+      <NuxtLink to="login">Connexion</NuxtLink>
+      <NuxtLink to="signup">Inscription</NuxtLink>
     </div>
   </div>
 </template>
@@ -12,6 +12,7 @@
 <script>
 export default {
   name: "indexPage",
+  layout: "before-login",
   auth: false,
 };
 </script>

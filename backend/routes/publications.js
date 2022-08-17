@@ -5,8 +5,11 @@ const auth = require("../middleware/auth");
 const multer = require("../middleware/multer-config");
 const publicationCtrl = require("../controllers/publications");
 
-//route affihage de toutes les publications
+//route affichage de toutes les publications
 router.get("/", auth, publicationCtrl.getAllPublications);
+
+//route affichage de toutes les publications d'un utilisateur
+router.get("/:userId", auth, publicationCtrl.getMyPublications);
 
 //route création d'une publication
 router.post("/", auth, multer, publicationCtrl.createPublication);

@@ -1,6 +1,10 @@
 <template>
   <div class="publications">
-    <div class="publication" v-for="publication of publicationsInfo">
+    <div
+      class="publication"
+      v-for="publication of publicationsInfo"
+      :key="publication._id"
+    >
       <div class="publication__user">
         <div class="publication__user__img-box">
           <img :src="publication.userProfilePicture" alt="" />
@@ -18,12 +22,24 @@
         </div>
       </div>
       <div class="publication__likes">
-        <i class="fa-solid fa-thumbs-up"></i><span class="number">0</span>
-        <i class="fa-solid fa-thumbs-down"></i><span class="number">0</span>
+        <i class="fa-solid fa-thumbs-up" @click="like(publication._id)"></i
+        ><span class="number">{{ publication.likes }}</span>
+        <i class="fa-solid fa-thumbs-down" @click="dislike(publication._id)"></i
+        ><span class="number">{{ publication.dislikes }}</span>
       </div>
-      <div class="publication__btn">
-        <button class="publication__btn__modify-btn">Modifier</button>
-        <button class="publication__btn__delete-btn">Supprimer</button>
+      <div
+        class="publication__btn"
+        v-if="isAuthorized(publication.userId) === true"
+      >
+        <NuxtLink to="modify-publication" class="publication__btn__modify-btn"
+          >Modifier</NuxtLink
+        >
+        <button
+          class="publication__btn__delete-btn"
+          @click="deletePublication(publication._id)"
+        >
+          Supprimer
+        </button>
       </div>
     </div>
   </div>
@@ -34,7 +50,86 @@ export default {
   name: "publication",
   props: ["publicationsInfo"],
   data() {
-    return {};
+    return {
+      liked: false,
+      disliked: false,
+    };
+  },
+  methods: {
+    async like(id) {
+      if (this.disliked === true) {
+        return;
+      } else if (this.liked === false) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 1,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            this.liked = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.liked === true) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 0,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            this.liked = false;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+
+    async dislike(id) {
+      if (this.liked === true) {
+        return;
+      } else if (this.disliked === false) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: -1,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            this.disliked = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.disliked === true) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 0,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            this.disliked = false;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+
+    async deletePublication(id) {
+      await this.$axios.$delete(`${process.env.apiUrl}/publications/${id}`);
+    },
+
+    isAuthorized(id) {
+      if (id === this.$auth.$state.user._id) {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
@@ -74,11 +169,11 @@ export default {
 
   &__content {
     border-bottom: 1px solid black;
-    padding-bottom: 15px;
 
     &__img-box {
       width: 200px;
       height: 200px;
+      margin-bottom: 15px;
       display: flex;
 
       &__img {
@@ -102,23 +197,35 @@ export default {
   &__btn {
     display: flex;
 
-    button {
+    &__modify-btn {
+      font-size: 15px;
+      padding: 5px;
+      margin: 5px;
+      color: black;
+      background-color: white;
+      border: 2px solid black;
+      border-radius: 5px;
+      transition: 300ms background-color;
+
+      &:hover {
+        background-color: #1a79f7;
+        color: white;
+      }
+    }
+
+    &__delete-btn {
       font-size: 15px;
       padding: 5px;
       margin: 5px;
       background-color: white;
+      border: 2px solid black;
       border-radius: 5px;
       transition: 300ms background-color;
-    }
 
-    &__modify-btn:hover {
-      background-color: #1a79f7;
-      color: white;
-    }
-
-    &__delete-btn:hover {
-      background-color: red;
-      color: white;
+      &:hover {
+        background-color: red;
+        color: white;
+      }
     }
   }
 }

@@ -5,28 +5,17 @@ const fs = require("fs");
 exports.createPublication = (req, res, next) => {
   const publicationObject = JSON.parse(req.body.publication);
   delete publicationObject._id;
+  let publication;
   if (!req.file) {
-    const publication = new Publication({
+    publication = new Publication({
       ...publicationObject,
       likes: 0,
       dislikes: 0,
       usersLiked: [],
       usersDisliked: [],
     });
-    publication
-      .save()
-      .then(() => {
-        res.status(201).json({
-          message: "Publication Créée!",
-        });
-      })
-      .catch((error) => {
-        res.status(400).json({
-          error: error,
-        });
-      });
   } else {
-    const publication = new Publication({
+    publication = new Publication({
       ...publicationObject,
       likes: 0,
       dislikes: 0,
@@ -36,19 +25,19 @@ exports.createPublication = (req, res, next) => {
         req.file.filename
       }`,
     });
-    publication
-      .save()
-      .then(() => {
-        res.status(201).json({
-          message: "Publication Créée!",
-        });
-      })
-      .catch((error) => {
-        res.status(400).json({
-          error: error,
-        });
-      });
   }
+  publication
+    .save()
+    .then((element) => {
+      res.status(201).json(element);
+    })
+    .catch((error) => {
+      console.log("🚀 ~ file: publications.js ~ line 35 ~ error", error);
+
+      res.status(400).json({
+        error: error,
+      });
+    });
 };
 
 //affichage d'une publication
@@ -69,6 +58,19 @@ exports.getOnePublication = (req, res, next) => {
 //affichage de toutes les publications
 exports.getAllPublications = (req, res, next) => {
   Publication.find()
+    .then((publications) => {
+      res.status(200).json(publications);
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
+    });
+};
+
+//affichage de toutes les publications d'un utilisateur
+exports.getMyPublications = (req, res, next) => {
+  Publication.find({ userId: req.params.userId })
     .then((publications) => {
       res.status(200).json(publications);
     })
@@ -140,8 +142,23 @@ exports.deletePublication = (req, res, next) => {
           error: new Error("Requête non authorisée !"),
         });
       }
-      const filename = publication.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
+      //verrifier si la publication contient une image
+      if (publication.imageUrl) {
+        const filename = publication.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          Publication.deleteOne({ _id: req.params.id })
+            .then(() => {
+              res.status(200).json({
+                message: "Publication Supprimée!",
+              });
+            })
+            .catch((error) => {
+              res.status(400).json({
+                error: error,
+              });
+            });
+        });
+      } else {
         Publication.deleteOne({ _id: req.params.id })
           .then(() => {
             res.status(200).json({
@@ -153,7 +170,7 @@ exports.deletePublication = (req, res, next) => {
               error: error,
             });
           });
-      });
+      }
     })
     .catch((error) => res.status(500).json({ error }));
 };

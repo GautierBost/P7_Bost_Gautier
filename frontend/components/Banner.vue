@@ -19,9 +19,9 @@
       </div>
       <transition name="fade">
         <div class="banner__menu__options" v-if="show">
-          <NuxtLink to="HomePage">Acceuil</NuxtLink>
-          <NuxtLink to="Profil">Mon profil</NuxtLink>
-          <NuxtLink to="MyPublications">Mes post</NuxtLink>
+          <NuxtLink to="home-page">Acceuil</NuxtLink>
+          <NuxtLink to="profil">Mon profil</NuxtLink>
+          <NuxtLink to="my-publications">Mes post</NuxtLink>
           <a href="" @click.prevent="$auth.logout()">Se deconecter</a>
         </div>
       </transition>
