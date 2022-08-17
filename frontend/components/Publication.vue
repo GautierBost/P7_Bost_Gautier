@@ -121,7 +121,14 @@ export default {
     },
 
     async deletePublication(id) {
-      await this.$axios.$delete(`${process.env.apiUrl}/publications/${id}`);
+      await this.$axios
+        .$delete(`${process.env.apiUrl}/publications/${id}`)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     isAuthorized(id) {

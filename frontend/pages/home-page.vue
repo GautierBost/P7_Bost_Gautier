@@ -25,7 +25,7 @@ export default {
         "🚀 ~ file: home-page.vue ~ line 24 ~ addNewPostToPublications ~ newPost",
         newPost
       );
-      this.publications.pop(newPost);
+      this.publications.unshift(newPost);
       console.log(
         "🚀 ~ file: home-page.vue ~ line 29 ~ addNewPostToPublications ~ this.publications",
         this.publications
