@@ -25,7 +25,9 @@
 <script>
 export default {
   name: "auth",
+
   props: ["type", "submitForm", "servError", "signUp"],
+
   data() {
     return {
       userInfo: {
@@ -37,6 +39,7 @@ export default {
       inputType: "password",
     };
   },
+
   methods: {
     checkForm: function () {
       if (!this.userInfo.email) {
@@ -62,14 +65,17 @@ export default {
         this.submitForm(this.userInfo);
       }
     },
+
     validEmail: function (email) {
       const re = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
       return re.test(email);
     },
+
     validPassword: function (password) {
       const re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
     },
+
     validName: function (name) {
       const re =
         /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,30}$/g;

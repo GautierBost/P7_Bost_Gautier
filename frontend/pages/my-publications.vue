@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <Publication :publicationsInfo="this.publications" />
+    <Publications
+      :publicationsInfo="publications"
+      @updateDeletedPost="removeDeletedPost"
+    />
   </div>
 </template>
 
@@ -21,6 +24,19 @@ export default {
     this.publications = res.sort(function (a, b) {
       return b.creationDate - a.creationDate;
     });
+  },
+  methods: {
+    removeDeletedPost(id) {
+      console.log(
+        "🚀 ~ file: home-page.vue ~ line 39 ~ removeDeletedPost ~ id",
+        id
+      );
+      this.publications = this.publications.filter((item) => item._id != id);
+      console.log(
+        "🚀 ~ file: home-page.vue ~ line 40 ~ removeDeletedPost ~ this.publications",
+        this.publications
+      );
+    },
   },
 };
 </script>

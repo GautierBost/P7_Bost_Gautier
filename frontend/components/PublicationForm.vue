@@ -1,5 +1,5 @@
 <template>
-  <form class="form" method="post" @submit.prevent="submitForm">
+  <form class="form" method="post" ref="form" @submit.prevent="submitForm">
     <label class="form__label" for="publication"
       >Écrivez quelque chose...</label
     >
@@ -18,51 +18,77 @@
       ref="file"
       @change="uploadFile"
     />
-    <button class="form__button" type="submit">Publier</button>
+    <button class="form__button" type="submit">{{ type }}</button>
   </form>
 </template>
 
 <script>
 export default {
+  name: "publication-form",
+
+  props: ["type", "publicationId"],
+
   data() {
     return {
       publication: {
         content: "",
         userId: this.$auth.$state.user._id,
-        userName: this.$auth.$state.user.name,
-        userProfilePicture: this.$auth.$state.user.profilePicture,
-        creationDate: 0,
       },
       images: null,
     };
   },
 
-  methods: {
-    setDate() {
-      this.publication.creationDate = Date.now();
+  computed: {
+    isReady() {
+      return this.publication.content != "" || this.images != null;
     },
+  },
 
+  methods: {
     uploadFile() {
       this.images = this.$refs.file.files[0];
     },
     async submitForm() {
-      this.setDate();
+      if (!this.isReady) {
+        return;
+      }
       const formData = new FormData();
       formData.append("publication", JSON.stringify(this.publication));
-      formData.append("image", this.images);
+      if (this.images) {
+        formData.append("image", this.images);
+      }
       const headers = { "Content-Type": "multipart/form-data" };
-
-      await this.$axios
-        .$post(`${process.env.apiUrl}/publications`, formData, {
-          headers,
-        })
-        .then((res) => {
-          console.log(res);
-          this.$emit("updateNewPost", res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if (this.type === "Publier") {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications`, formData, {
+            headers,
+          })
+          .then((res) => {
+            console.log(res);
+            this.$emit("updateNewPost", res);
+            this.publication.content = "";
+            this.images = null;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        await this.$axios
+          .$put(
+            `${process.env.apiUrl}/publications/${this.publicationId}`,
+            formData,
+            {
+              headers,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            this.$router.push("/home-page");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
   },
 };

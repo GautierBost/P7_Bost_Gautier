@@ -21,6 +21,12 @@
           />
         </div>
       </div>
+      <p v-if="publication.modificationDate" class="publication__date">
+        Modifié le {{ formalizedDate(publication.modificationDate) }}
+      </p>
+      <p v-else class="publication__date">
+        Publié le {{ formalizedDate(publication.creationDate) }}
+      </p>
       <div class="publication__likes">
         <i class="fa-solid fa-thumbs-up" @click="like(publication._id)"></i
         ><span class="number">{{ publication.likes }}</span>
@@ -31,7 +37,7 @@
         class="publication__btn"
         v-if="isAuthorized(publication.userId) === true"
       >
-        <NuxtLink to="modify-publication" class="publication__btn__modify-btn"
+        <NuxtLink :to="publication._id" class="publication__btn__modify-btn"
           >Modifier</NuxtLink
         >
         <button
@@ -47,84 +53,103 @@
 
 <script>
 export default {
-  name: "publication",
+  name: "publications",
+
   props: ["publicationsInfo"],
+
   data() {
-    return {
-      liked: false,
-      disliked: false,
-    };
+    return {};
   },
+
+  computed: {},
+
   methods: {
-    async like(id) {
-      if (this.disliked === true) {
-        return;
-      } else if (this.liked === false) {
-        await this.$axios
-          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-            like: 1,
-            userId: this.$auth.$state.user._id,
-          })
-          .then((res) => {
-            console.log(res);
-            this.liked = true;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (this.liked === true) {
-        await this.$axios
-          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-            like: 0,
-            userId: this.$auth.$state.user._id,
-          })
-          .then((res) => {
-            console.log(res);
-            this.liked = false;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+    // liked(id) {
+    //   console.log("🚀 ~ file: Publications.vue ~ line 75 ~ liked ~ id", id);
+    //   let publication = this.publicationsInfo.filter((item) => item._id == id);
+    //   console.log(
+    //     "🚀 ~ file: Publications.vue ~ line 77 ~ liked ~ publication",
+    //     publication
+    //   );
+    //   let user = publication.usersLiked;
+    //   console.log(user);
+    // },
+    // disliked() {},
+
+    formalizedDate(date) {
+      let myDate = new Date(date);
+      return myDate.toLocaleDateString("fr");
     },
 
-    async dislike(id) {
-      if (this.liked === true) {
-        return;
-      } else if (this.disliked === false) {
-        await this.$axios
-          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-            like: -1,
-            userId: this.$auth.$state.user._id,
-          })
-          .then((res) => {
-            console.log(res);
-            this.disliked = true;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (this.disliked === true) {
-        await this.$axios
-          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-            like: 0,
-            userId: this.$auth.$state.user._id,
-          })
-          .then((res) => {
-            console.log(res);
-            this.disliked = false;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    },
+    // async like(id) {
+    //   if (this.disliked === true) {
+    //     return;
+    //   } else if (this.liked === false) {
+    //     await this.$axios
+    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+    //         like: 1,
+    //         userId: this.$auth.$state.user._id,
+    //       })
+    //       .then((res) => {
+    //         console.log(res);
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   } else if (this.liked === true) {
+    //     await this.$axios
+    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+    //         like: 0,
+    //         userId: this.$auth.$state.user._id,
+    //       })
+    //       .then((res) => {
+    //         console.log(res);
+    //         this.liked = false;
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   }
+    // },
+
+    // async dislike(id) {
+    //   if (this.liked === true) {
+    //     return;
+    //   } else if (this.disliked === false) {
+    //     await this.$axios
+    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+    //         like: -1,
+    //         userId: this.$auth.$state.user._id,
+    //       })
+    //       .then((res) => {
+    //         console.log(res);
+    //         this.disliked = true;
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   } else if (this.disliked === true) {
+    //     await this.$axios
+    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+    //         like: 0,
+    //         userId: this.$auth.$state.user._id,
+    //       })
+    //       .then((res) => {
+    //         console.log(res);
+    //         this.disliked = false;
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   }
+    // },
 
     async deletePublication(id) {
       await this.$axios
         .$delete(`${process.env.apiUrl}/publications/${id}`)
         .then((res) => {
           console.log(res);
+          this.$emit("updateDeletedPost", id);
         })
         .catch((err) => {
           console.log(err);
@@ -234,6 +259,13 @@ export default {
         color: white;
       }
     }
+  }
+
+  &__date {
+    align-self: flex-end;
+    font-size: 15px;
+    color: #707070;
+    margin-bottom: 0;
   }
 }
 </style>

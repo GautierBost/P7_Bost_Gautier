@@ -1,4 +1,5 @@
 const Publication = require("../models/publication");
+const User = require("../models/user");
 const fs = require("fs");
 
 //creation d'une publication
@@ -9,6 +10,7 @@ exports.createPublication = (req, res, next) => {
   if (!req.file) {
     publication = new Publication({
       ...publicationObject,
+      creationDate: Date.now(),
       likes: 0,
       dislikes: 0,
       usersLiked: [],
@@ -17,6 +19,7 @@ exports.createPublication = (req, res, next) => {
   } else {
     publication = new Publication({
       ...publicationObject,
+      creationDate: Date.now(),
       likes: 0,
       dislikes: 0,
       usersLiked: [],
@@ -59,7 +62,33 @@ exports.getOnePublication = (req, res, next) => {
 exports.getAllPublications = (req, res, next) => {
   Publication.find()
     .then((publications) => {
-      res.status(200).json(publications);
+      let myPublications = [];
+      publications.forEach((element) => {
+        console.log(
+          "🚀 ~ file: publications.js ~ line 68 ~ .then ~ element",
+          element
+        );
+        User.findOne({ _id: element.userId }).then((user) => {
+          console.log(
+            "🚀 ~ file: publications.js ~ line 71 ~ .then ~ user",
+            user
+          );
+
+          const publication = {
+            ...element,
+            userName: user.name,
+            userProfilePicture: user.profilePicture,
+          };
+
+          console.log(
+            "🚀 ~ file: publications.js ~ line 82 ~ User.findOne ~ publication",
+            publication
+          );
+          myPublications.push(publication);
+        });
+      });
+      console.log(myPublications);
+      res.status(200).json(myPublications);
     })
     .catch((error) => {
       res.status(400).json({
@@ -96,7 +125,7 @@ exports.modifyPublication = (req, res, next) => {
       });
     }
     //si nouvelle image suppression de l'ancienne
-    if (req.file) {
+    if (req.file && publication.imageUrl) {
       const filename = publication.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, (err) => {
         if (err) throw err;
@@ -105,11 +134,15 @@ exports.modifyPublication = (req, res, next) => {
     const publicationObject = req.file
       ? {
           ...JSON.parse(req.body.publication),
+          modificationDate: Date.now(),
           imageUrl: `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`,
         }
-      : { ...req.body };
+      : {
+          ...JSON.parse(req.body.publication),
+          modificationDate: Date.now(),
+        };
     Publication.updateOne(
       { _id: req.params.id },
       { ...publicationObject, _id: req.params.id }

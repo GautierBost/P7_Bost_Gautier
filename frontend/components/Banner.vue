@@ -32,12 +32,14 @@
 <script>
 export default {
   name: "banner",
+
   data() {
     return {
       show: false,
       profilePicture: this.$auth.$state.user.profilePicture,
     };
   },
+
   methods: {
     toggle: function () {
       this.show = !this.show;

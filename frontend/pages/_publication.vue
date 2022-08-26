@@ -1,12 +1,21 @@
 <template>
   <div class="page">
-    <PublicationForm />
+    <PublicationForm
+      :type="formType"
+      :publicationId="this.$route.params.publication"
+    />
   </div>
 </template>
 
 <script>
 export default {
   name: "modify-publication",
+
+  data() {
+    return {
+      formType: "Modifier",
+    };
+  },
 };
 </script>
 

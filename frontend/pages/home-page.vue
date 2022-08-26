@@ -1,7 +1,13 @@
 <template>
   <div class="page">
-    <PublicationForm @updateNewPost="addNewPostToPublications" />
-    <Publication :publicationsInfo="publications" />
+    <PublicationForm
+      :type="formType"
+      @updateNewPost="addNewPostToPublications"
+    />
+    <Publications
+      :publicationsInfo="publications"
+      @updateDeletedPost="removeDeletedPost"
+    />
   </div>
 </template>
 
@@ -11,6 +17,7 @@ export default {
   data() {
     return {
       publications: [],
+      formType: "Publier",
     };
   },
   async fetch() {
@@ -28,6 +35,18 @@ export default {
       this.publications.unshift(newPost);
       console.log(
         "🚀 ~ file: home-page.vue ~ line 29 ~ addNewPostToPublications ~ this.publications",
+        this.publications
+      );
+    },
+
+    removeDeletedPost(id) {
+      console.log(
+        "🚀 ~ file: home-page.vue ~ line 39 ~ removeDeletedPost ~ id",
+        id
+      );
+      this.publications = this.publications.filter((item) => item._id != id);
+      console.log(
+        "🚀 ~ file: home-page.vue ~ line 40 ~ removeDeletedPost ~ this.publications",
         this.publications
       );
     },

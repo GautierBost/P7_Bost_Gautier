@@ -90,15 +90,13 @@ exports.modifyUser = (req, res, next) => {
             req.file.filename
           }`,
         }
-      : { ...req.body };
+      : { ...JSON.parse(req.body.userInfo) };
     User.updateOne(
       { _id: req.params.userId },
       { ...userObject, _id: req.params.userId }
     )
-      .then(() => {
-        res.status(201).json({
-          message: "Utilisateur modifiée!",
-        });
+      .then((element) => {
+        res.status(201).json(element);
       })
       .catch((error) => {
         console.log(error);
