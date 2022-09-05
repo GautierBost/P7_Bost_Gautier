@@ -93,7 +93,7 @@ export default {
   }
 
   &__name {
-    margin-left: 20px;
+    padding: 0 20px;
     font-size: 30px;
   }
 }
@@ -141,6 +141,16 @@ export default {
     &:hover {
       background-color: darken($secondary-color, 10%);
     }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .user-info {
+    flex-direction: column;
+  }
+
+  .form {
+    width: 300px;
   }
 }
 </style>

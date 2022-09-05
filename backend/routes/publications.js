@@ -9,7 +9,11 @@ const publicationCtrl = require("../controllers/publications");
 router.get("/", auth, publicationCtrl.getAllPublications);
 
 //route affichage de toutes les publications d'un utilisateur
-router.get("/:userId", auth, publicationCtrl.getMyPublications);
+router.get(
+  "/user/:userId/publications",
+  auth,
+  publicationCtrl.getMyPublications
+);
 
 //route création d'une publication
 router.post("/", auth, multer, publicationCtrl.createPublication);

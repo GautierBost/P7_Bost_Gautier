@@ -136,4 +136,16 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 900px) {
+  .form {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .form {
+    width: 300px;
+  }
+}
 </style>

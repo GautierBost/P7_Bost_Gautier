@@ -28,16 +28,26 @@
         Publié le {{ formalizedDate(publication.creationDate) }}
       </p>
       <div class="publication__likes">
-        <i class="fa-solid fa-thumbs-up" @click="like(publication._id)"></i
+        <i
+          class="fa-solid fa-thumbs-up"
+          :class="{ green: liked(publication._id) }"
+          @click="like(publication._id)"
+        ></i
         ><span class="number">{{ publication.likes }}</span>
-        <i class="fa-solid fa-thumbs-down" @click="dislike(publication._id)"></i
+        <i
+          class="fa-solid fa-thumbs-down"
+          :class="{ red: disliked(publication._id) }"
+          @click="dislike(publication._id)"
+        ></i
         ><span class="number">{{ publication.dislikes }}</span>
       </div>
       <div
         class="publication__btn"
         v-if="isAuthorized(publication.userId) === true"
       >
-        <NuxtLink :to="publication._id" class="publication__btn__modify-btn"
+        <NuxtLink
+          :to="`/modify-publication/${publication._id}`"
+          class="publication__btn__modify-btn"
           >Modifier</NuxtLink
         >
         <button
@@ -61,88 +71,88 @@ export default {
     return {};
   },
 
-  computed: {},
-
   methods: {
-    // liked(id) {
-    //   console.log("🚀 ~ file: Publications.vue ~ line 75 ~ liked ~ id", id);
-    //   let publication = this.publicationsInfo.filter((item) => item._id == id);
-    //   console.log(
-    //     "🚀 ~ file: Publications.vue ~ line 77 ~ liked ~ publication",
-    //     publication
-    //   );
-    //   let user = publication.usersLiked;
-    //   console.log(user);
-    // },
-    // disliked() {},
+    liked(id) {
+      const publication = this.publicationsInfo.filter(
+        (item) => item._id == id
+      )[0];
+      const users = publication.usersLiked;
+      return users.includes(this.$auth.$state.user._id);
+    },
+    disliked(id) {
+      const publication = this.publicationsInfo.filter(
+        (item) => item._id == id
+      )[0];
+      const users = publication.usersDisliked;
+      return users.includes(this.$auth.$state.user._id);
+    },
 
     formalizedDate(date) {
-      let myDate = new Date(date);
+      const myDate = new Date(date);
       return myDate.toLocaleDateString("fr");
     },
 
-    // async like(id) {
-    //   if (this.disliked === true) {
-    //     return;
-    //   } else if (this.liked === false) {
-    //     await this.$axios
-    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-    //         like: 1,
-    //         userId: this.$auth.$state.user._id,
-    //       })
-    //       .then((res) => {
-    //         console.log(res);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   } else if (this.liked === true) {
-    //     await this.$axios
-    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-    //         like: 0,
-    //         userId: this.$auth.$state.user._id,
-    //       })
-    //       .then((res) => {
-    //         console.log(res);
-    //         this.liked = false;
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
+    async like(id) {
+      if (this.disliked(id) === true) {
+        return;
+      } else if (this.liked(id) === false) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 1,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            liked(id);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.liked(id) === true) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 0,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+            liked(id);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
 
-    // async dislike(id) {
-    //   if (this.liked === true) {
-    //     return;
-    //   } else if (this.disliked === false) {
-    //     await this.$axios
-    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-    //         like: -1,
-    //         userId: this.$auth.$state.user._id,
-    //       })
-    //       .then((res) => {
-    //         console.log(res);
-    //         this.disliked = true;
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   } else if (this.disliked === true) {
-    //     await this.$axios
-    //       .$post(`${process.env.apiUrl}/publications/${id}/like`, {
-    //         like: 0,
-    //         userId: this.$auth.$state.user._id,
-    //       })
-    //       .then((res) => {
-    //         console.log(res);
-    //         this.disliked = false;
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
+    async dislike(id) {
+      if (this.liked(id) === true) {
+        return;
+      } else if (this.disliked(id) === false) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: -1,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.disliked(id) === true) {
+        await this.$axios
+          .$post(`${process.env.apiUrl}/publications/${id}/like`, {
+            like: 0,
+            userId: this.$auth.$state.user._id,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
 
     async deletePublication(id) {
       await this.$axios
@@ -224,6 +234,14 @@ export default {
       color: $tertiary-color;
       font-size: 25px;
     }
+
+    .green {
+      color: green;
+    }
+
+    .red {
+      color: red;
+    }
   }
 
   &__btn {
@@ -266,6 +284,18 @@ export default {
     font-size: 15px;
     color: #707070;
     margin-bottom: 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .publication {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .publication {
+    width: 300px;
   }
 }
 </style>

@@ -19,7 +19,7 @@ export default {
   },
   async fetch() {
     const res = await this.$axios.$get(
-      `${process.env.apiUrl}/publications/${this.$auth.$state.user._id}`
+      `${process.env.apiUrl}/publications/user/${this.$auth.$state.user._id}/publications`
     );
     this.publications = res.sort(function (a, b) {
       return b.creationDate - a.creationDate;

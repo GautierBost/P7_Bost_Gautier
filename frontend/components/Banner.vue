@@ -19,9 +19,9 @@
       </div>
       <transition name="fade">
         <div class="banner__menu__options" v-if="show">
-          <NuxtLink to="home-page">Acceuil</NuxtLink>
-          <NuxtLink to="profil">Mon profil</NuxtLink>
-          <NuxtLink to="my-publications">Mes post</NuxtLink>
+          <NuxtLink to="/home-page">Acceuil</NuxtLink>
+          <NuxtLink to="/profil">Mon profil</NuxtLink>
+          <NuxtLink to="/my-publications">Mes post</NuxtLink>
           <a href="" @click.prevent="$auth.logout()">Se deconecter</a>
         </div>
       </transition>
@@ -140,7 +140,7 @@ export default {
 
     &__options {
       position: fixed;
-      right: 0;
+      right: 10px;
       top: 110px;
       font-size: 25px;
       padding: 5px;

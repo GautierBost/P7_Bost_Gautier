@@ -49,7 +49,14 @@ exports.getOnePublication = (req, res, next) => {
     _id: req.params.id,
   })
     .then((publication) => {
-      res.status(200).json(publication);
+      User.findOne({ _id: publication.userId }).then((user) => {
+        const completePublication = {
+          ...publication.toObject(),
+          userName: user.name,
+          userProfilePicture: user.profilePicture,
+        };
+        res.status(200).json(completePublication);
+      });
     })
     .catch((error) => {
       res.status(404).json({
@@ -59,55 +66,47 @@ exports.getOnePublication = (req, res, next) => {
 };
 
 //affichage de toutes les publications
-exports.getAllPublications = (req, res, next) => {
-  Publication.find()
-    .then((publications) => {
-      let myPublications = [];
-      publications.forEach((element) => {
-        console.log(
-          "🚀 ~ file: publications.js ~ line 68 ~ .then ~ element",
-          element
-        );
-        User.findOne({ _id: element.userId }).then((user) => {
-          console.log(
-            "🚀 ~ file: publications.js ~ line 71 ~ .then ~ user",
-            user
-          );
+exports.getAllPublications = async (req, res, next) => {
+  try {
+    const publications = await Publication.find();
 
-          const publication = {
-            ...element,
-            userName: user.name,
-            userProfilePicture: user.profilePicture,
-          };
-
-          console.log(
-            "🚀 ~ file: publications.js ~ line 82 ~ User.findOne ~ publication",
-            publication
-          );
-          myPublications.push(publication);
-        });
+    const promises = publications.map(async (el) => {
+      const userInfo = await User.findOne({ _id: el.userId }).then((user) => {
+        return { userName: user.name, userProfilePicture: user.profilePicture };
       });
-      console.log(myPublications);
-      res.status(200).json(myPublications);
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
+      return {
+        ...el.toObject(),
+        userName: userInfo.userName,
+        userProfilePicture: userInfo.userProfilePicture,
+      };
     });
+    const resolvedPromises = await Promise.all(promises);
+    res.status(200).json(resolvedPromises);
+  } catch (error) {
+    res.status(400).json(error);
+  }
 };
 
 //affichage de toutes les publications d'un utilisateur
-exports.getMyPublications = (req, res, next) => {
-  Publication.find({ userId: req.params.userId })
-    .then((publications) => {
-      res.status(200).json(publications);
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
+exports.getMyPublications = async (req, res, next) => {
+  try {
+    const publications = await Publication.find({ userId: req.params.userId });
+
+    const promises = publications.map(async (el) => {
+      const userInfo = await User.findOne({ _id: el.userId }).then((user) => {
+        return { userName: user.name, userProfilePicture: user.profilePicture };
       });
+      return {
+        ...el.toObject(),
+        userName: userInfo.userName,
+        userProfilePicture: userInfo.userProfilePicture,
+      };
     });
+    const resolvedPromises = await Promise.all(promises);
+    res.status(200).json(resolvedPromises);
+  } catch (error) {
+    res.status(400).json(error);
+  }
 };
 
 //modification d'une publication

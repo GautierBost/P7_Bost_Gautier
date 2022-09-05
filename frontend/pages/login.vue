@@ -44,4 +44,10 @@ export default {
 .block {
   width: 400px;
 }
+
+@media screen and (max-width: 450px) {
+  .block {
+    width: 300px;
+  }
+}
 </style>

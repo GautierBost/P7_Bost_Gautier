@@ -23,6 +23,7 @@ export default {
 
   &__logo {
     width: 200px;
+    margin-bottom: 65px;
     transform: rotate(0deg);
     transition: 2s cubic-bezier(0.58, -0.48, 0.32, 1.41) transform;
 
@@ -34,10 +35,12 @@ export default {
   &__title {
     color: $primary-color;
     font-size: 100px;
+    margin: 0;
   }
 
   &__links {
     width: 100%;
+    margin-top: 65px;
     display: flex;
     justify-content: space-evenly;
   }
@@ -60,6 +63,12 @@ export default {
     &:hover {
       transform: scale(1.2);
     }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .page__title {
+    font-size: 50px;
   }
 }
 </style>

@@ -8,9 +8,11 @@
       </div>
       <div class="form__inputs__password">
         <label for="password">Password</label>
-        <input :type="inputType" v-model="userInfo.password" id="password" />
+        <div>
+          <input :type="inputType" v-model="userInfo.password" id="password" />
+          <i class="fa-solid fa-eye-slash" @click="showPassword"></i>
+        </div>
       </div>
-      <i class="fa-solid fa-eye-slash" @click="showPassword"></i>
       <div class="form__inputs__name" v-if="signUp === true">
         <label for="name">Nom d'utilisateur</label>
         <input type="text" v-model="userInfo.name" id="name" />
@@ -122,15 +124,17 @@ export default {
       align-self: center;
     }
 
+    &__password {
+      padding-left: 25px;
+    }
+
     input {
       height: 25px;
     }
   }
 
   i {
-    position: relative;
-    top: -35px;
-    left: 310px;
+    align-self: center;
   }
 
   .error {
