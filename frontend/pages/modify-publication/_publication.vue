@@ -3,6 +3,7 @@
     <PublicationForm
       :type="formType"
       :publicationId="this.$route.params.publication"
+      @updatePost="updatePost"
     />
     <div class="publication">
       <div class="publication__user">
@@ -51,6 +52,10 @@ export default {
     formalizedDate(date) {
       let myDate = new Date(date);
       return myDate.toLocaleDateString("fr");
+    },
+
+    updatePost(post) {
+      this.publication = post;
     },
   },
 };

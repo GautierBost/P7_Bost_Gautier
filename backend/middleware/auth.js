@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const User = require("../models/user");
+
 const secretToken = process.env.SECRET_TOKEN;
 module.exports = (req, res, next) => {
   try {
@@ -13,6 +15,11 @@ module.exports = (req, res, next) => {
     const userId = decodedToken.userId;
     //ajout dans la requete d'un objet auth contenant l'userId associe au token
     req.auth = { userId };
+    //recuperer user et verifier admin
+    User.findOne({ _id: userId }).then((user) => {
+      const isAdmin = user.isAdmin;
+      req.admin = { isAdmin };
+    });
 
     //comparer l'userId de la requete avec celui du token
     if (req.body.userId && req.body.userId !== userId) {

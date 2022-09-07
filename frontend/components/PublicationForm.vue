@@ -83,7 +83,9 @@ export default {
           )
           .then((res) => {
             console.log(res);
-            this.$router.push("/home-page");
+            this.$emit("updatePost", res);
+            this.publication.content = "";
+            this.images = null;
           })
           .catch((err) => {
             console.log(err);

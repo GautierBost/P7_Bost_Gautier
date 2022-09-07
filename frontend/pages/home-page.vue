@@ -7,6 +7,7 @@
     <Publications
       :publicationsInfo="publications"
       @updateDeletedPost="removeDeletedPost"
+      @updatePublication="updatePublication"
     />
   </div>
 </template>
@@ -27,6 +28,15 @@ export default {
     });
   },
   methods: {
+    updatePublication(newPublication) {
+      this.publications = this.publications.map((publication) => {
+        if (publication._id === newPublication._id) {
+          return newPublication;
+        }
+        return publication;
+      });
+    },
+
     addNewPostToPublications(newPost) {
       console.log(
         "🚀 ~ file: home-page.vue ~ line 24 ~ addNewPostToPublications ~ newPost",

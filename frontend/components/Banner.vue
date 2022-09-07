@@ -149,8 +149,13 @@ export default {
       @include vignette;
 
       a {
-        margin: 10px;
+        margin: 5px;
+        padding: 5px;
         color: $tertiary-color;
+        &:hover {
+          background-color: #eeeeee;
+          border-radius: 10px;
+        }
 
         &.nuxt-link-active {
           color: $primary-color;

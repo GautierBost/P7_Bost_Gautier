@@ -103,7 +103,12 @@ export default {
           })
           .then((res) => {
             console.log(res);
-            liked(id);
+            const publication = this.publicationsInfo.filter(
+              (item) => item._id == id
+            )[0];
+            publication.usersLiked.push(this.$auth.$state.user._id);
+            publication.likes++;
+            this.$emit("updatePublication", publication);
           })
           .catch((err) => {
             console.log(err);
@@ -116,7 +121,14 @@ export default {
           })
           .then((res) => {
             console.log(res);
-            liked(id);
+            const publication = this.publicationsInfo.filter(
+              (item) => item._id == id
+            )[0];
+            publication.usersLiked = publication.usersLiked.filter(
+              (item) => item !== this.$auth.$state.user._id
+            );
+            publication.likes--;
+            this.$emit("updatePublication", publication);
           })
           .catch((err) => {
             console.log(err);
@@ -135,6 +147,12 @@ export default {
           })
           .then((res) => {
             console.log(res);
+            const publication = this.publicationsInfo.filter(
+              (item) => item._id == id
+            )[0];
+            publication.usersDisliked.push(this.$auth.$state.user._id);
+            publication.dislikes++;
+            this.$emit("updatePublication", publication);
           })
           .catch((err) => {
             console.log(err);
@@ -147,6 +165,14 @@ export default {
           })
           .then((res) => {
             console.log(res);
+            const publication = this.publicationsInfo.filter(
+              (item) => item._id == id
+            )[0];
+            publication.usersDisliked = publication.usersLiked.filter(
+              (item) => item !== this.$auth.$state.user._id
+            );
+            publication.dislikes--;
+            this.$emit("updatePublication", publication);
           })
           .catch((err) => {
             console.log(err);
@@ -167,7 +193,7 @@ export default {
     },
 
     isAuthorized(id) {
-      if (id === this.$auth.$state.user._id) {
+      if (id === this.$auth.$state.user._id || this.$auth.$state.user.isAdmin) {
         return true;
       }
       return false;

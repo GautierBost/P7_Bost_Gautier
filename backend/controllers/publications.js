@@ -112,14 +112,9 @@ exports.getMyPublications = async (req, res, next) => {
 //modification d'une publication
 exports.modifyPublication = (req, res, next) => {
   Publication.findOne({ _id: req.params.id }).then((publication) => {
-    if (!publication) {
-      res.status(404).json({
-        error: new Error("Publication non trouvée !"),
-      });
-    }
-    //comparer le userId de la publication et du token
-    if (publication.userId !== req.auth.userId) {
-      res.status(400).json({
+    //verifier admin et comparer le userId de la publication et du token
+    if (!req.admin.isAdmin && publication.userId !== req.auth.userId) {
+      return res.status(400).json({
         error: new Error("Requête non authorisée !"),
       });
     }
@@ -146,10 +141,8 @@ exports.modifyPublication = (req, res, next) => {
       { _id: req.params.id },
       { ...publicationObject, _id: req.params.id }
     )
-      .then(() => {
-        res.status(201).json({
-          message: "Publication modifiée!",
-        });
+      .then((coucou) => {
+        res.status(201).json(coucou);
       })
       .catch((error) => {
         res.status(400).json({
@@ -163,14 +156,9 @@ exports.modifyPublication = (req, res, next) => {
 exports.deletePublication = (req, res, next) => {
   Publication.findOne({ _id: req.params.id })
     .then((publication) => {
-      if (!publication) {
-        res.status(404).json({
-          error: new Error("Publication non trouvée !"),
-        });
-      }
-      //comparer le userId de la publication et du token
-      if (publication.userId !== req.auth.userId) {
-        res.status(400).json({
+      //verifier admin et comparer le userId de la publication et du token
+      if (!req.admin.isAdmin && publication.userId !== req.auth.userId) {
+        return res.status(400).json({
           error: new Error("Requête non authorisée !"),
         });
       }
