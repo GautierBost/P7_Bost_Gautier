@@ -34,7 +34,7 @@ export default {
         content: "",
         userId: this.$auth.$state.user._id,
       },
-      images: null,
+      image: null,
     };
   },
 
@@ -46,19 +46,19 @@ export default {
 
   methods: {
     uploadFile() {
-      this.images = this.$refs.file.files[0];
+      this.image = this.$refs.file.files[0];
     },
     async submitForm() {
       if (!this.isReady) {
         return;
       }
-      const formData = new FormData();
-      formData.append("publication", JSON.stringify(this.publication));
-      if (this.images) {
-        formData.append("image", this.images);
-      }
       const headers = { "Content-Type": "multipart/form-data" };
       if (this.type === "Publier") {
+        const formData = new FormData();
+        formData.append("publication", JSON.stringify(this.publication));
+        if (this.image) {
+          formData.append("image", this.image);
+        }
         await this.$axios
           .$post(`${process.env.apiUrl}/publications`, formData, {
             headers,
@@ -67,12 +67,18 @@ export default {
             console.log(res);
             this.$emit("updateNewPost", res);
             this.publication.content = "";
-            this.images = null;
+            this.image = null;
           })
           .catch((err) => {
             console.log(err);
           });
       } else {
+        const publication = { content: this.publication.content };
+        const formData = new FormData();
+        formData.append("publication", JSON.stringify(publication));
+        if (this.image) {
+          formData.append("image", this.image);
+        }
         await this.$axios
           .$put(
             `${process.env.apiUrl}/publications/${this.publicationId}`,
@@ -85,7 +91,7 @@ export default {
             console.log(res);
             this.$emit("updatePost", res);
             this.publication.content = "";
-            this.images = null;
+            this.image = null;
           })
           .catch((err) => {
             console.log(err);
