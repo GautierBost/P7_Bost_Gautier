@@ -262,7 +262,7 @@ export default {
     }
 
     .green {
-      color: green;
+      color: rgb(58, 204, 0);
     }
 
     .red {
