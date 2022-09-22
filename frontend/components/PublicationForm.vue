@@ -7,8 +7,9 @@
       class="form__text"
       name="publication"
       id="publication"
-      cols="30"
       rows="10"
+      maxlength="300"
+      placeholder="300 caractères max"
       v-model="publication.content"
     ></textarea>
     <input
@@ -40,7 +41,7 @@ export default {
 
   computed: {
     isReady() {
-      return this.publication.content != "" || this.images != null;
+      return this.publication.content != "" || this.image != null;
     },
   },
 
@@ -56,9 +57,7 @@ export default {
       if (this.type === "Publier") {
         const formData = new FormData();
         formData.append("publication", JSON.stringify(this.publication));
-        if (this.image) {
-          formData.append("image", this.image);
-        }
+        formData.append("image", this.image);
         await this.$axios
           .$post(`${process.env.apiUrl}/publications`, formData, {
             headers,
@@ -75,12 +74,12 @@ export default {
       } else {
         const publication = { content: this.publication.content };
         const formData = new FormData();
-        formData.append("publication", JSON.stringify(publication));
-        if (this.image) {
-          formData.append("image", this.image);
+        formData.append("image", this.image);
+        if (this.publication.content !== "") {
+          formData.append("publication", JSON.stringify(publication));
         }
         await this.$axios
-          .$put(
+          .$patch(
             `${process.env.apiUrl}/publications/${this.publicationId}`,
             formData,
             {

@@ -8,12 +8,11 @@
         class="banner__menu__toggle"
         :class="{ isActive: show }"
         @click="toggle"
-        @focus="showToggle"
         @focusout="hideToggle"
         tabindex="0"
       >
         <div class="banner__menu__toggle__img-box">
-          <img :src="profilePicture" alt="photo de profil" />
+          <img :src="$auth.$state.user.profilePicture" alt="photo de profil" />
         </div>
         <div class="banner__menu__toggle__arrow">
           <div class="left"></div>
@@ -47,9 +46,7 @@ export default {
     toggle() {
       this.show = !this.show;
     },
-    showToggle() {
-      this.show = true;
-    },
+
     hideToggle() {
       this.show = false;
     },

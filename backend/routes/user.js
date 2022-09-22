@@ -15,6 +15,6 @@ router.post("/login", userCtrl.login);
 router.get("/user", auth, userCtrl.user);
 
 //route modification d'un utilisateur
-router.put("/:userId", auth, multer, userCtrl.modifyUser);
+router.patch("/:userId", auth, multer, userCtrl.modifyUser);
 
 module.exports = router;

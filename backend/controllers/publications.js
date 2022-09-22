@@ -2,9 +2,13 @@ const Publication = require("../models/publication");
 const User = require("../models/user");
 const fs = require("fs");
 
+function cleanData(userInput) {
+  return DOMPurify.sanitize(userInput);
+}
+
 //creation d'une publication
 exports.createPublication = (req, res, next) => {
-  const publicationObject = JSON.parse(req.body.publication);
+  const publicationObject = JSON.parse(cleanData(req.body.publication));
   delete publicationObject._id;
   let publication;
   if (!req.file) {
@@ -31,8 +35,15 @@ exports.createPublication = (req, res, next) => {
   }
   publication
     .save()
-    .then((element) => {
-      res.status(201).json(element);
+    .then((publication) => {
+      User.findOne({ _id: publication.userId }).then((user) => {
+        const completePublication = {
+          ...publication.toObject(),
+          userName: user.name,
+          userProfilePicture: user.profilePicture,
+        };
+        res.status(201).json(completePublication);
+      });
     })
     .catch((error) => {
       console.log("🚀 ~ file: publications.js ~ line 35 ~ error", error);
@@ -125,24 +136,37 @@ exports.modifyPublication = (req, res, next) => {
         if (err) throw err;
       });
     }
+    let content = publication.content;
+    if (req.body.publication) {
+      const publication = JSON.parse(req.body.publication);
+      content = cleanData(publication.content);
+    }
     const publicationObject = req.file
       ? {
-          ...JSON.parse(req.body.publication),
+          content: content,
           modificationDate: Date.now(),
           imageUrl: `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`,
         }
       : {
-          ...JSON.parse(req.body.publication),
+          content: content,
           modificationDate: Date.now(),
         };
-    Publication.updateOne(
+    Publication.findOneAndUpdate(
       { _id: req.params.id },
-      { ...publicationObject, _id: req.params.id }
+      { $set: publicationObject },
+      { returnDocument: "after" }
     )
-      .then((coucou) => {
-        res.status(201).json(coucou);
+      .then((publication) => {
+        User.findOne({ _id: publication.userId }).then((user) => {
+          const completePublication = {
+            ...publication.toObject(),
+            userName: user.name,
+            userProfilePicture: user.profilePicture,
+          };
+          res.status(201).json(completePublication);
+        });
       })
       .catch((error) => {
         res.status(400).json({

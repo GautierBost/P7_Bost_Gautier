@@ -1,10 +1,15 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const DOMPurify = require("isomorphic-dompurify");
 const dotenv = require("dotenv");
 dotenv.config();
 
 const User = require("../models/user");
+
+function cleanData(userInput) {
+  return DOMPurify.sanitize(userInput);
+}
 
 //fonction inscription
 exports.signup = (req, res, next) => {
@@ -15,7 +20,7 @@ exports.signup = (req, res, next) => {
       const user = new User({
         email: req.body.email,
         password: hash,
-        name: req.body.name,
+        name: cleanData(req.body.name),
       });
       user
         .save()
@@ -58,7 +63,7 @@ exports.login = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// fonction recuperation d'un user
+// fonction recuperation de l'user
 exports.user = (req, res, next) => {
   User.findOne({ _id: req.auth.userId })
     .then((user) => {
@@ -83,17 +88,23 @@ exports.modifyUser = (req, res, next) => {
         });
       }
     }
+    let name = user.name;
+    if (req.body.userInfo) {
+      const userInfo = JSON.parse(req.body.userInfo);
+      name = cleanData(userInfo.name);
+    }
     const userObject = req.file
       ? {
-          ...JSON.parse(req.body.userInfo),
+          name: name,
           profilePicture: `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`,
         }
-      : { ...JSON.parse(req.body.userInfo) };
-    User.updateOne(
+      : { name: name };
+    User.findOneAndUpdate(
       { _id: req.params.userId },
-      { ...userObject, _id: req.params.userId }
+      { $set: userObject },
+      { returnDocument: "after" }
     )
       .then((element) => {
         res.status(201).json(element);

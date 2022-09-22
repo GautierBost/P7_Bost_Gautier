@@ -22,7 +22,7 @@ router.post("/", auth, multer, publicationCtrl.createPublication);
 router.get("/:id", auth, publicationCtrl.getOnePublication);
 
 //route modification d'une publication
-router.put("/:id", auth, multer, publicationCtrl.modifyPublication);
+router.patch("/:id", auth, multer, publicationCtrl.modifyPublication);
 
 //route suppression d'une publication
 router.delete("/:id", auth, publicationCtrl.deletePublication);

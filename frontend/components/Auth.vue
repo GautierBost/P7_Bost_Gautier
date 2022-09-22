@@ -43,7 +43,7 @@ export default {
   },
 
   methods: {
-    checkForm: function () {
+    checkForm() {
       if (!this.userInfo.email) {
         this.error = "Email requis";
       } else if (!this.validEmail(this.userInfo.email)) {
@@ -68,23 +68,23 @@ export default {
       }
     },
 
-    validEmail: function (email) {
+    validEmail(email) {
       const re = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
       return re.test(email);
     },
 
-    validPassword: function (password) {
+    validPassword(password) {
       const re = /^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/g;
       return re.test(password);
     },
 
-    validName: function (name) {
+    validName(name) {
       const re =
         /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,30}$/g;
       return re.test(name);
     },
 
-    showPassword: function () {
+    showPassword() {
       if (this.inputType === "password") {
         this.inputType = "text";
       } else {
