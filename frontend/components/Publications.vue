@@ -102,7 +102,6 @@ export default {
             userId: this.$auth.$state.user._id,
           })
           .then((res) => {
-            console.log(res);
             const publication = this.publicationsInfo.filter(
               (item) => item._id == id
             )[0];
@@ -120,7 +119,6 @@ export default {
             userId: this.$auth.$state.user._id,
           })
           .then((res) => {
-            console.log(res);
             const publication = this.publicationsInfo.filter(
               (item) => item._id == id
             )[0];
@@ -146,7 +144,6 @@ export default {
             userId: this.$auth.$state.user._id,
           })
           .then((res) => {
-            console.log(res);
             const publication = this.publicationsInfo.filter(
               (item) => item._id == id
             )[0];
@@ -164,7 +161,6 @@ export default {
             userId: this.$auth.$state.user._id,
           })
           .then((res) => {
-            console.log(res);
             const publication = this.publicationsInfo.filter(
               (item) => item._id == id
             )[0];
@@ -184,7 +180,6 @@ export default {
       await this.$axios
         .$delete(`${process.env.apiUrl}/publications/${id}`)
         .then((res) => {
-          console.log(res);
           this.$emit("updateDeletedPost", id);
         })
         .catch((err) => {

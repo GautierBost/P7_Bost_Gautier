@@ -38,27 +38,11 @@ export default {
     },
 
     addNewPostToPublications(newPost) {
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 24 ~ addNewPostToPublications ~ newPost",
-        newPost
-      );
       this.publications.unshift(newPost);
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 29 ~ addNewPostToPublications ~ this.publications",
-        this.publications
-      );
     },
 
     removeDeletedPost(id) {
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 39 ~ removeDeletedPost ~ id",
-        id
-      );
       this.publications = this.publications.filter((item) => item._id != id);
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 40 ~ removeDeletedPost ~ this.publications",
-        this.publications
-      );
     },
   },
 };

@@ -5,8 +5,8 @@
     </div>
     <div class="banner__menu">
       <div
-        class="banner__menu__toggle"
-        :class="{ isActive: show }"
+        class="banner__menu__toggle okih"
+        :class="{ isActive: $store.state.show }"
         @click="toggle"
         @focusout="hideToggle"
         tabindex="0"
@@ -24,7 +24,7 @@
           <NuxtLink to="/home-page">Acceuil</NuxtLink>
           <NuxtLink to="/profil">Mon profil</NuxtLink>
           <NuxtLink to="/my-publications">Mes post</NuxtLink>
-          <a href="" @click.prevent="$auth.logout()">Se deconecter</a>
+          <a href="#" @mousedown="$auth.logout()">Se deconecter</a>
         </div>
       </transition>
     </div>
@@ -37,18 +37,22 @@ export default {
 
   data() {
     return {
-      show: false,
       profilePicture: this.$auth.$state.user.profilePicture,
     };
   },
 
+  computed: {
+    show() {
+      return this.$store.state.show;
+    },
+  },
+
   methods: {
     toggle() {
-      this.show = !this.show;
+      this.$store.commit("toggle");
     },
-
     hideToggle() {
-      this.show = false;
+      this.$store.commit("hideToggle");
     },
   },
 };

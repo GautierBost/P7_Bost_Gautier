@@ -81,10 +81,7 @@ export default {
           }
         )
         .then((res) => {
-          console.log(res);
           this.$auth.setUser(res);
-          // this.name = res.name;
-          // this.profilePicture = res.profilePicture;
           this.userInfo.name = "";
           this.image = null;
         })

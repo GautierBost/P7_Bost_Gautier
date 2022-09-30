@@ -63,7 +63,6 @@ export default {
             headers,
           })
           .then((res) => {
-            console.log(res);
             this.$emit("updateNewPost", res);
             this.publication.content = "";
             this.image = null;
@@ -87,7 +86,6 @@ export default {
             }
           )
           .then((res) => {
-            console.log(res);
             this.$emit("updatePost", res);
             this.publication.content = "";
             this.image = null;

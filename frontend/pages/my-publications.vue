@@ -27,15 +27,7 @@ export default {
   },
   methods: {
     removeDeletedPost(id) {
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 39 ~ removeDeletedPost ~ id",
-        id
-      );
       this.publications = this.publications.filter((item) => item._id != id);
-      console.log(
-        "🚀 ~ file: home-page.vue ~ line 40 ~ removeDeletedPost ~ this.publications",
-        this.publications
-      );
     },
   },
 };

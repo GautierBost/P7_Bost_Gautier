@@ -23,8 +23,7 @@ export default {
         .loginWith("local", {
           data: userInfo,
         })
-        .then((response) => {
-          console.log(response);
+        .then((res) => {
           this.$router.push("/home-page");
         })
         .catch((err) => {

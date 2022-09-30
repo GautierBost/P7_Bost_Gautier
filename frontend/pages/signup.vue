@@ -27,8 +27,7 @@ export default {
     async submitForm(userInfo) {
       await this.$axios
         .$post(`http://localhost:3000/api/auth/signup`, userInfo)
-        .then((response) => {
-          console.log(response);
+        .then((res) => {
           this.$router.push("/login");
         })
         .catch((err) => {
